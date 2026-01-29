@@ -20,7 +20,77 @@ The `mbtf` command line allows importing Metabase dashboards and cards from a Me
 
 ### Installation
 
-Currently, the tool can be installed using the `go` command (binaries will be provided as part of each release in the future):
+#### Option 1: Download from GitHub Releases (Recommended)
+
+Pre-built binaries are available for each release on the [GitHub Releases page](https://github.com/flovouin/terraform-provider-metabase/releases).
+
+1. Download the appropriate archive for your operating system and architecture (e.g., `mbtf_1.0.0_linux_amd64.zip` for Linux on x86_64)
+2. Extract the archive
+3. Move the `mbtf` binary (or `mbtf.exe` on Windows) to a directory in your `PATH`, or use it directly
+
+**Example for Linux/macOS:**
+```bash
+# Download and extract (replace VERSION and OS/ARCH with your values)
+wget https://github.com/flovouin/terraform-provider-metabase/releases/download/v1.0.0/mbtf_1.0.0_linux_amd64.zip
+unzip mbtf_1.0.0_linux_amd64.zip
+
+# Make it executable and move to a directory in PATH
+chmod +x mbtf
+sudo mv mbtf /usr/local/bin/
+```
+
+**Example for Windows (PowerShell):**
+```powershell
+# Download and extract (replace VERSION with your values)
+Invoke-WebRequest -Uri "https://github.com/flovouin/terraform-provider-metabase/releases/download/v1.0.0/mbtf_1.0.0_windows_amd64.zip" -OutFile "mbtf.zip"
+Expand-Archive -Path "mbtf.zip" -DestinationPath "."
+# Add the directory containing mbtf.exe to your PATH, or use it directly
+```
+
+#### Option 2: Run Directly from Release (One-liner)
+
+You can download and run `mbtf` directly without installing it permanently:
+
+**Linux/macOS:**
+```bash
+# Replace VERSION, OS, and ARCH with your values (e.g., v1.0.0, linux, amd64)
+VERSION="v1.0.0" OS="linux" ARCH="amd64" && \
+curl -L "https://github.com/flovouin/terraform-provider-metabase/releases/download/${VERSION}/mbtf_${VERSION#v}_${OS}_${ARCH}.zip" -o /tmp/mbtf.zip && \
+unzip -o /tmp/mbtf.zip -d /tmp && \
+chmod +x /tmp/mbtf && \
+/tmp/mbtf "$@" && \
+rm /tmp/mbtf /tmp/mbtf.zip
+```
+
+Or as a simpler one-liner (downloads to current directory):
+```bash
+# Linux x86_64
+curl -L https://github.com/flovouin/terraform-provider-metabase/releases/download/v1.0.0/mbtf_1.0.0_linux_amd64.zip -o mbtf.zip && unzip -o mbtf.zip && chmod +x mbtf && ./mbtf && rm mbtf mbtf.zip
+
+# macOS (Intel)
+curl -L https://github.com/flovouin/terraform-provider-metabase/releases/download/v1.0.0/mbtf_1.0.0_darwin_amd64.zip -o mbtf.zip && unzip -o mbtf.zip && chmod +x mbtf && ./mbtf && rm mbtf mbtf.zip
+
+# macOS (Apple Silicon)
+curl -L https://github.com/flovouin/terraform-provider-metabase/releases/download/v1.0.0/mbtf_1.0.0_darwin_arm64.zip -o mbtf.zip && unzip -o mbtf.zip && chmod +x mbtf && ./mbtf && rm mbtf mbtf.zip
+```
+
+**Windows (PowerShell):**
+```powershell
+# Replace VERSION with your desired version (e.g., v1.0.0)
+$VERSION = "v1.0.0"
+$OS = "windows"
+$ARCH = "amd64"
+Invoke-WebRequest -Uri "https://github.com/flovouin/terraform-provider-metabase/releases/download/$VERSION/mbtf_$($VERSION.TrimStart('v'))_${OS}_${ARCH}.zip" -OutFile "mbtf.zip"
+Expand-Archive -Path "mbtf.zip" -DestinationPath "." -Force
+.\mbtf.exe
+Remove-Item "mbtf.zip", "mbtf.exe"
+```
+
+**Note:** Replace `v1.0.0` with the actual release version you want to use. You can find the latest version on the [GitHub Releases page](https://github.com/flovouin/terraform-provider-metabase/releases).
+
+#### Option 3: Build from Source
+
+Alternatively, you can install the tool using the `go` command:
 
 ```bash
 export PATH=${PATH}:$(go env GOPATH)/bin

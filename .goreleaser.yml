@@ -1,4 +1,5 @@
 builds:
+  # Build the Terraform provider
   - env:
       - CGO_ENABLED=0
     mod_timestamp: "{{ .CommitTimestamp }}"
@@ -20,10 +21,43 @@ builds:
       - goos: darwin
         goarch: "386"
     binary: "{{ .ProjectName }}_v{{ .Version }}"
+  
+  # Build the mbtf importer tool
+  - id: mbtf
+    env:
+      - CGO_ENABLED=0
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - "-s -w"
+    goos:
+      - freebsd
+      - windows
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - "386"
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: "386"
+    dir: cmd/mbtf
+    binary: mbtf
 
 archives:
+  # Archive configuration for the Terraform provider
   - format: zip
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  
+  # Archive configuration for the mbtf tool
+  - id: mbtf
+    format: zip
+    builds:
+      - mbtf
+    name_template: "mbtf_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
   extra_files:
